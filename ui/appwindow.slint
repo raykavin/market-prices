@@ -1,0 +1,135 @@
+import {  VerticalBox,  ListView, HorizontalBox, Spinner } from "std-widgets.slint";
+
+component RefreshButton inherits Rectangle {
+    in-out property text <=> txt.text;
+    callback clicked <=> touch.clicked;
+    border-radius: root.height / 2;
+    border-width: 1px;
+    border-color: root.background.darker(25%);
+    background: touch.pressed ? #6b8282 : touch.has-hover ? #6c616c : #456;
+    height: txt.preferred-height * 1.33;
+    min-width: txt.preferred-width + 20px;
+
+    txt := Text {
+        x: (parent.width - self.width) / 2 + (touch.pressed ? 2px : 0);
+        y: (parent.height - self.height) / 2 + (touch.pressed ? 1px : 0);
+        color: touch.pressed ? #fff : #eee;
+    }
+
+    img := Image {
+        source: @image-url("icons/refresh.png");
+        x: (parent.width - self.width) / 2;
+        y: (parent.height - self.height) / 2;
+        width: 24px;
+        height: 24px;
+    }
+
+    touch := TouchArea { }
+}
+
+export component AppWindow inherits Window {
+    title: "Market Prices";
+    min-width: 400px;
+    min-height: 150px;
+    background: #0c0e11;
+    in-out property <string> btcPrice: "0";
+    in-out property <string> ethPrice: "0";
+    callback request-update-btc();
+    callback request-update-eth();
+
+    HorizontalLayout {
+        spacing: 10px;
+        padding: 10px;
+
+        // Card for BTC
+        Rectangle {
+            width: 200px;
+            height: 50%;
+            background: @linear-gradient(2deg, #0c0e11, #2e2e2e);
+            border-radius: 10px;
+            VerticalBox {
+                spacing: 15px;
+                alignment: LayoutAlignment.space-around;
+                HorizontalBox {
+                    alignment: LayoutAlignment.space-between;
+                    spacing: 5px;
+                    Image {
+                        source: @image-url("icons/btc.png");
+                        width: 40px;
+                        height: 40px;
+                    }
+
+                    Text {
+                        text: "Bitcoin";
+                        font-size: 18px;
+                        vertical-alignment: center;
+                        color: #c0c0c0;
+                    }
+                }
+
+                Text {
+                    text: "$\{root.btcPrice}";
+                    font-size: 24px;
+                    vertical-alignment: center;
+                    color: #FFFFFF;
+                    horizontal-alignment: right;
+                    horizontal-stretch: 1;
+                }
+
+                RefreshButton {
+                    text: "";
+                    height: 40px;
+                    width: 40px;
+                    clicked => {
+                        root.request-update-btc();
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            width: 200px;
+            height: 50%;
+            background: @linear-gradient(2deg, #0c0e11, #2e2e2e);
+            border-radius: 10px;
+            VerticalBox {
+                spacing: 15px;
+                alignment: LayoutAlignment.space-around;
+                HorizontalBox {
+                    alignment: LayoutAlignment.space-between;
+                    spacing: 5px;
+                    Image {
+                        source: @image-url("icons/eth.png");
+                        width: 40px;
+                        height: 40px;
+                    }
+
+                    Text {
+                        text: "Ethereum";
+                        font-size: 18px;
+                        vertical-alignment: center;
+                        color: #c0c0c0;
+                    }
+                }
+
+                Text {
+                    text: "$\{root.ethPrice}";
+                    font-size: 24px;
+                    vertical-alignment: center;
+                    color: #FFFFFF;
+                    horizontal-alignment: right;
+                    horizontal-stretch: 1;
+                }
+
+                RefreshButton {
+                    text: "";
+                    height: 40px;
+                    width: 40px;
+                    clicked => {
+                        root.request-update-eth();
+                    }
+                }
+            }
+        }
+    }
+}
