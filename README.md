@@ -12,3 +12,8 @@ This project is an example of a **Rust** application using the **Slint** library
 
 - **Rust**: The main programming language used in the project.
 - **Slint**: Framework for building the graphical interface.
+
+
+## Preview
+
+![Application Screenshot](images/example.jpeg)
